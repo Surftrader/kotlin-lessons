@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,7 +39,9 @@ fun HelloWorld() {
             text = "Hello World!",
             fontSize = 25.sp,
             color = Color.Red,
-            modifier = Modifier.background(Color.Yellow)
+            modifier = Modifier
+                .background(Color.Yellow)
+                .align(Alignment.End)
         )
         Text(
             text = "Gendalf",
