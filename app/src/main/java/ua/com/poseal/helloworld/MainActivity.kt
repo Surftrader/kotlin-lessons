@@ -21,7 +21,11 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview(showSystemUi = true)
+@Preview(
+    widthDp = 400,
+    heightDp = 800,
+    showBackground = true
+)
 @Composable
 fun HelloWorld() {
     Row {
