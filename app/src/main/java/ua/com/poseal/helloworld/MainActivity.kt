@@ -42,17 +42,23 @@ fun HelloWorld() {
             modifier = Modifier
                 .background(Color.Yellow)
                 .align(Alignment.End)
+                .weight(2f)
         )
         Text(
             text = "Gendalf",
             fontSize = 20.sp,
-            color = Color.Blue
+            color = Color.Blue,
+            modifier = Modifier
+                .background(Color.Green)
+                .weight(4f)
         )
         Text(
             text = "42",
             fontSize = 50.sp,
             color = Color.Green,
-            modifier = Modifier.background(Color.Red)
+            modifier = Modifier
+                .background(Color.Red)
+                .weight(2f)
         )
     }
 }
