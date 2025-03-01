@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,10 +24,17 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun HelloWorld() {
-    Text(
-        text = "Hello World!",
-        fontSize = 25.sp,
-        color = Color.Red,
-        modifier = Modifier.background(Color.Yellow)
-    )
+    Column {
+        Text(
+            text = "Hello World!",
+            fontSize = 25.sp,
+            color = Color.Red,
+            modifier = Modifier.background(Color.Yellow)
+        )
+        Text(
+            text = "Gendalf",
+            fontSize = 20.sp,
+            color = Color.Blue
+        )
+    }
 }
