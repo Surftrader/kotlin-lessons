@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,7 +25,9 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun HelloWorld() {
-    Row {
+    Row(
+        modifier = Modifier.fillMaxSize()
+    ) {
         Text(
             text = "Hello World!",
             fontSize = 25.sp,
