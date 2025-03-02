@@ -3,17 +3,20 @@ package ua.com.poseal.helloworld
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,47 +25,36 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            HelloWorld()
+            StatefulCounter()
         }
     }
 }
 
 @Preview(showSystemUi = true)
 @Composable
-fun HelloWorld() {
-    Column (
-        modifier = Modifier
-            .background(Color.Cyan)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceEvenly,
-        horizontalAlignment = BiasAlignment.Horizontal(-0.8f)
+fun StatefulCounter() {
+    val counterMutableState = remember {
+        mutableStateOf(0)
+    }
+
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize(),
     ) {
         Text(
-            text = "Hello World!",
-            fontSize = 25.sp,
-            color = Color.Red,
-            modifier = Modifier
-                .background(Color.Blue)
-                .padding(10.dp)
-                .background(Color.Yellow)
-                .align(Alignment.End)
-                .weight(2f)
+            text = counterMutableState.value.toString(),
+            fontSize = 60.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = FontFamily.Monospace,
         )
-        Text(
-            text = "Gendalf",
-            fontSize = 20.sp,
-            color = Color.Blue,
-            modifier = Modifier
-                .background(Color.Green)
-                .weight(4f)
-        )
-        Text(
-            text = "42",
-            fontSize = 50.sp,
-            color = Color.Green,
-            modifier = Modifier
-                .background(Color.Red)
-                .weight(2f)
-        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Button(
+            onClick = {
+                counterMutableState.value++
+            }
+        ) {
+            Text(text = "increment", fontSize = 18.sp)
+        }
     }
 }
