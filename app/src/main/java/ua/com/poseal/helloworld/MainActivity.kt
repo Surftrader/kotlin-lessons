@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
@@ -38,7 +40,7 @@ class MainActivity : ComponentActivity() {
 @Preview(showSystemUi = true)
 @Composable
 fun StatefulCounter() {
-    val (value, setValue) = remember {
+    var counterState by remember {
         mutableStateOf(CounterState(Random.nextInt(1000)))
     }
 
@@ -48,7 +50,7 @@ fun StatefulCounter() {
         modifier = Modifier.fillMaxSize(),
     ) {
         Text(
-            text = value.number.toString(),
+            text = counterState.number.toString(),
             fontSize = 60.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Monospace,
@@ -56,10 +58,9 @@ fun StatefulCounter() {
         Spacer(modifier = Modifier.height(12.dp))
         Button(
             onClick = {
-                val newState = value.copy(
-                    number = value.number + 1
+                counterState = counterState.copy(
+                    number = counterState.number + 1
                 )
-                setValue(newState)
             }
         ) {
             Text(text = "increment", fontSize = 18.sp)
