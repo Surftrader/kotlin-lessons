@@ -13,7 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,11 +22,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlin.random.Random
 
-data class CounterState(
-    val number: Int = 0
-)
+//data class CounterState(
+//    val number: Int = 0
+//)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,8 +39,8 @@ class MainActivity : ComponentActivity() {
 @Preview(showSystemUi = true)
 @Composable
 fun StatefulCounter() {
-    var counterState by remember {
-        mutableStateOf(CounterState(Random.nextInt(1000)))
+    var number by rememberSaveable {
+        mutableStateOf(0)
     }
 
     Column(
@@ -50,7 +49,7 @@ fun StatefulCounter() {
         modifier = Modifier.fillMaxSize(),
     ) {
         Text(
-            text = counterState.number.toString(),
+            text = number.toString(),
             fontSize = 60.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Monospace,
@@ -58,9 +57,7 @@ fun StatefulCounter() {
         Spacer(modifier = Modifier.height(12.dp))
         Button(
             onClick = {
-                counterState = counterState.copy(
-                    number = counterState.number + 1
-                )
+                number++
             }
         ) {
             Text(text = "increment", fontSize = 18.sp)
