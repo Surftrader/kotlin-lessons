@@ -22,10 +22,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.io.Serializable
 
-//data class CounterState(
-//    val number: Int = 0
-//)
+data class CounterState(
+    val number: Int = 0
+) : Serializable
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,8 +40,8 @@ class MainActivity : ComponentActivity() {
 @Preview(showSystemUi = true)
 @Composable
 fun StatefulCounter() {
-    var number by rememberSaveable {
-        mutableStateOf(0)
+    var counterState by rememberSaveable {
+        mutableStateOf(CounterState(0))
     }
 
     Column(
@@ -49,7 +50,7 @@ fun StatefulCounter() {
         modifier = Modifier.fillMaxSize(),
     ) {
         Text(
-            text = number.toString(),
+            text = counterState.number.toString(),
             fontSize = 60.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Monospace,
@@ -57,7 +58,9 @@ fun StatefulCounter() {
         Spacer(modifier = Modifier.height(12.dp))
         Button(
             onClick = {
-                number++
+                counterState = counterState.copy(
+                    number = counterState.number + 1
+                )
             }
         ) {
             Text(text = "increment", fontSize = 18.sp)
