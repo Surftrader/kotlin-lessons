@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
 @Preview(showSystemUi = true)
 @Composable
 fun StatefulCounter() {
-    val counterMutableState = remember {
+    val (value, setValue) = remember {
         mutableStateOf(CounterState(Random.nextInt(1000)))
     }
 
@@ -48,7 +48,7 @@ fun StatefulCounter() {
         modifier = Modifier.fillMaxSize(),
     ) {
         Text(
-            text = counterMutableState.value.number.toString(),
+            text = value.number.toString(),
             fontSize = 60.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Monospace,
@@ -56,11 +56,10 @@ fun StatefulCounter() {
         Spacer(modifier = Modifier.height(12.dp))
         Button(
             onClick = {
-                val state = counterMutableState.value
-                val newState = state.copy(
-                    number = state.number + 1
+                val newState = value.copy(
+                    number = value.number + 1
                 )
-                counterMutableState.value = newState
+                setValue(newState)
             }
         ) {
             Text(text = "increment", fontSize = 18.sp)
