@@ -34,36 +34,41 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            StatefulCounter()
+            var counterState by rememberSaveable {
+                mutableStateOf(CounterState(0))
+            }
+            StatelessCounter(
+                counterValue = counterState.number,
+                onIncrement = { alreadyIncrementedValue ->
+                    counterState = counterState.copy(
+                        number = alreadyIncrementedValue
+                    )
+                }
+            )
         }
     }
 }
 
 @Preview(showSystemUi = true)
 @Composable
-fun StatefulCounter() {
-    var counterState by rememberSaveable {
-        mutableStateOf(CounterState(0))
-    }
-
+fun StatelessCounter(
+    counterValue: Int = 0,
+    onIncrement: (incrementedValue: Int) -> Unit = {},
+) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize(),
     ) {
         Text(
-            text = counterState.number.toString(),
+            text = counterValue.toString(),
             fontSize = 60.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = FontFamily.Monospace,
         )
         Spacer(modifier = Modifier.height(12.dp))
         Button(
-            onClick = {
-                counterState = counterState.copy(
-                    number = counterState.number + 1
-                )
-            }
+            onClick = { onIncrement(counterValue + 1) }
         ) {
             Text(text = "increment", fontSize = 18.sp)
         }
