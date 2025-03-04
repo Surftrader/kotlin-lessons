@@ -56,6 +56,7 @@ fun StatelessCounter(
     counterValue: Int = 0,
     onIncrement: (incrementedValue: Int) -> Unit = {},
 ) {
+    logCompositionLifecycle(name = "StatelessCounter")
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -75,6 +76,7 @@ fun StatelessCounter(
         }
         Box(modifier = Modifier.height(100.dp)) {
             if (counterValue % 2 == 0) {
+                logCompositionLifecycle(name = "IsEvenText")
                 Text(
                     text = "Is Even = true",
                     fontSize = 18.sp
