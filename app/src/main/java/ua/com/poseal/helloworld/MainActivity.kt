@@ -5,6 +5,7 @@ import android.os.Parcelable
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -71,6 +72,14 @@ fun StatelessCounter(
             onClick = { onIncrement(counterValue + 1) }
         ) {
             Text(text = "increment", fontSize = 18.sp)
+        }
+        Box(modifier = Modifier.height(100.dp)) {
+            if (counterValue % 2 == 0) {
+                Text(
+                    text = "Is Even = true",
+                    fontSize = 18.sp
+                )
+            }
         }
     }
 }
