@@ -15,8 +15,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -79,6 +81,9 @@ fun StatelessCounter(
         ) {
             Text(text = "increment", fontSize = 18.sp)
         }
+        val offsetValue by remember {
+            derivedStateOf { counterValue / 3 }
+        }
         Text(
             text = "Test",
             textAlign = TextAlign.Center,
@@ -86,8 +91,8 @@ fun StatelessCounter(
             modifier = Modifier
                 .size(width = 60.dp, height = 60.dp)
                 .offset {
-                    println("AAA layout - $counterValue")
-                    IntOffset(y = 20 * (counterValue / 3), x = 0)
+                    println("AAA layout")
+                    IntOffset(y = 20 * offsetValue, x = 0)
                 }
                 //.offset(y = 20.dp * (counterValue / 3))
                 .background(Color.Blue)
