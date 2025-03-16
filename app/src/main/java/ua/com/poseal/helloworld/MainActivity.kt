@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +29,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Preview(showSystemUi = true)
 @Composable
 fun AppScreen() {
@@ -39,17 +39,13 @@ fun AppScreen() {
         modifier = Modifier.fillMaxWidth()
     ) {
 
-        stickyHeader {
-            ListHeader(text = "Test Header 111")
-        }
+        listHeader(text = "Test Header 111")
 
         items(list) { item ->
             ListItem(text = item)
         }
 
-        stickyHeader {
-            ListHeader(text = "Test Header 222")
-        }
+        listHeader(text = "Test Header 222")
 
         items(30) { index ->
             ListItem(text = "Item ${index + 1}")
@@ -57,17 +53,19 @@ fun AppScreen() {
     }
 }
 
-@Composable
-fun ListHeader(text: String) {
-    Text(
-        text = text,
-        fontWeight = FontWeight.Bold,
-        fontSize = 20.sp,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.LightGray)
-            .padding(all = 16.dp)
-    )
+@OptIn(ExperimentalFoundationApi::class)
+fun LazyListScope.listHeader(text: String) {
+    stickyHeader {
+        Text(
+            text = text,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.LightGray)
+                .padding(all = 16.dp)
+        )
+    }
 }
 
 @Composable
