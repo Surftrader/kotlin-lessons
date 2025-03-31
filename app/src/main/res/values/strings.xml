@@ -17,4 +17,7 @@
     <string name="image_cropped_by_aspect_ratio">Image cropped by aspect ratio</string>
     <string name="clipped_image">Clipped image</string>
     <string name="clipped_image_with_custom_shape">Clipped Image with Custom Shape</string>
+    <string name="user_photo">user photo</string>
+    <string name="delete_user">delete user</string>
+    <string name="clicked_on">clicked on</string>
 </resources>

@@ -53,6 +53,8 @@ dependencies {
 
     implementation(libs.coil.compose)
 
+    implementation("com.github.javafaker:javafaker:1.0.2")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
