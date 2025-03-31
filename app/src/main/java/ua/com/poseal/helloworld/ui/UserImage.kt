@@ -1,4 +1,4 @@
-package ua.com.poseal.helloworld.base
+package ua.com.poseal.helloworld.ui
 
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.size

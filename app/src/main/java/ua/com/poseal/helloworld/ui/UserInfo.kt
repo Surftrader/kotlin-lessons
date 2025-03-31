@@ -1,4 +1,4 @@
-package ua.com.poseal.helloworld.base
+package ua.com.poseal.helloworld.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ua.com.poseal.helloworld.model.User
 
 @Composable
 fun RowScope.UserInfo(user: User) {

@@ -1,4 +1,4 @@
-package ua.com.poseal.helloworld.base
+package ua.com.poseal.helloworld.ui
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons

@@ -58,8 +58,8 @@ dependencies {
     implementation(libs.androidx.material3)
 
     implementation(libs.coil.compose)
-
-    implementation("com.github.javafaker:javafaker:1.0.2")
+    implementation(libs.javafaker)
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
