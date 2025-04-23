@@ -1,6 +1,7 @@
 [versions]
 agp = "8.9.0"
 coilCompose = "2.4.0"
+constraintlayoutCompose = "1.0.1"
 javafaker = "1.0.2"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
@@ -14,6 +15,7 @@ composeBom = "2024.04.01"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 javafaker = { module = "com.github.javafaker:javafaker", version.ref = "javafaker" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
