@@ -10,8 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -24,9 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
-import kotlinx.coroutines.delay
 import ua.com.poseal.helloworld.util.PreviewWithInsets
-import kotlin.coroutines.cancellation.CancellationException
+import kotlin.concurrent.timer
 import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
@@ -88,17 +86,18 @@ fun AppScreen() {
             )
 
             if (counter % 4 < 2) {
-                // Here LaunchedEffect executes each time when counter % 4 < 2
-                LaunchedEffect(counter) {
+                // Here DisposableEffect executes each time when counter % 4 < 2
+                // It is not for coroutines (as LaunchedEffect) but for callbacks
+                DisposableEffect(counter) {
                     println("AAAA launched")
-                    try {
-                        while (true) {
-                            delay(1000)
-                            println("AAAA Hello - ${Random.nextInt(1000)}")
-                        }
-                    } catch (e: CancellationException) {
+
+                    val timer = timer(period = 1000L) {
+                        println("AAAA Hello - ${Random.nextInt(1000)}")
+                    }
+
+                    onDispose {
+                        timer.cancel()
                         println("AAAA canceled")
-                        throw e
                     }
                 }
 
