@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,9 +54,9 @@ fun AppScreen() {
 
             // SideEffect executes after each composition or recomposition
             // LaunchedEffect executes one time after create composition
-            SideEffect {
-                println("AAAA Hello - $counter")
-            }
+//            SideEffect {
+//                println("AAAA Hello - $counter")
+//            }
 
 
             Text(
@@ -84,6 +85,10 @@ fun AppScreen() {
             )
 
             if (counter % 4 < 2) {
+                // Here LaunchedEffect executes each time when counter % 4 < 2
+                LaunchedEffect(0) {
+                    println("AAAA Hello - $counter")
+                }
 
                 Box(
                     modifier = Modifier
