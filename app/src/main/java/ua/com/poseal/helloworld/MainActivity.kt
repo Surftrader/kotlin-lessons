@@ -24,7 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
+import kotlinx.coroutines.delay
 import ua.com.poseal.helloworld.util.PreviewWithInsets
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,8 +89,17 @@ fun AppScreen() {
 
             if (counter % 4 < 2) {
                 // Here LaunchedEffect executes each time when counter % 4 < 2
-                LaunchedEffect(0) {
-                    println("AAAA Hello - $counter")
+                LaunchedEffect(counter) {
+                    println("AAAA launched")
+                    try {
+                        while (true) {
+                            delay(1000)
+                            println("AAAA Hello - ${Random.nextInt(1000)}")
+                        }
+                    } catch (e: CancellationException) {
+                        println("AAAA canceled")
+                        throw e
+                    }
                 }
 
                 Box(
