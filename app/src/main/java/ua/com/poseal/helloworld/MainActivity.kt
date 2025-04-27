@@ -10,9 +10,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -24,8 +25,6 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import ua.com.poseal.helloworld.util.PreviewWithInsets
-import kotlin.concurrent.timer
-import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,23 +44,25 @@ fun AppScreen() {
             mutableStateOf(0)
         }
 
+        val shouldShowSquare by remember {
+            derivedStateOf {
+                println("AAAA - derivedStateOf")
+                counter % 6 > 2
+            }
+        }
+
         ConstraintLayout(
             modifier = Modifier.fillMaxSize(),
         ) {
+            println("AAAA - start composition")
             val (
                 counterTextRef,
                 incrementButtonRef
             ) = createRefs()
 
-            // SideEffect executes after each composition or recomposition
-            // LaunchedEffect executes one time after create composition
-//            SideEffect {
-//                println("AAAA Hello - $counter")
-//            }
-
-
             Text(
                 text = counter.toString(),
+                //text = "QWERTY",
                 fontSize = 32.sp,
                 modifier = Modifier.constrainAs(counterTextRef) {
                     centerHorizontallyTo(parent)
@@ -69,7 +70,6 @@ fun AppScreen() {
             )
 
             Button(
-                // Press to button is Side-effect also
                 onClick = {
                     counter++
                 },
@@ -85,22 +85,7 @@ fun AppScreen() {
                 chainStyle = ChainStyle.Packed,
             )
 
-            if (counter % 4 < 2) {
-                // Here DisposableEffect executes each time when counter % 4 < 2
-                // It is not for coroutines (as LaunchedEffect) but for callbacks
-                DisposableEffect(counter) {
-                    println("AAAA launched")
-
-                    val timer = timer(period = 1000L) {
-                        println("AAAA Hello - ${Random.nextInt(1000)}")
-                    }
-
-                    onDispose {
-                        timer.cancel()
-                        println("AAAA canceled")
-                    }
-                }
-
+            if (shouldShowSquare) {
                 Box(
                     modifier = Modifier
                         .size(64.dp)
@@ -111,6 +96,7 @@ fun AppScreen() {
                         }
                 )
             }
+            println("AAAA - stop composition")
         }
     }
 }
