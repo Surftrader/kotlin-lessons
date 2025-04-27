@@ -15,6 +15,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import ua.com.poseal.helloworld.util.PreviewWithInsets
 
 class MainActivity : ComponentActivity() {
@@ -55,6 +57,8 @@ fun AppScreen() {
 
         MyFun(value = counter)
 
+        val scope = rememberCoroutineScope()
+
         ConstraintLayout(
             modifier = Modifier.fillMaxSize(),
         ) {
@@ -75,6 +79,9 @@ fun AppScreen() {
             Button(
                 onClick = {
                     counter++
+                    scope.launch {
+                        delay(10000)
+                    }
                 },
                 modifier = Modifier.constrainAs(incrementButtonRef) {
                     centerHorizontallyTo(parent)
