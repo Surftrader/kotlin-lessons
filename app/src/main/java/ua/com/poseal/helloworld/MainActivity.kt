@@ -15,9 +15,9 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
-import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.delay
 import ua.com.poseal.helloworld.util.PreviewWithInsets
 
 class MainActivity : ComponentActivity() {
@@ -53,18 +53,19 @@ fun AppScreen() {
             }
         }
 
+        MyFun(value = counter)
+
         ConstraintLayout(
             modifier = Modifier.fillMaxSize(),
         ) {
-            println("AAAA - start composition")
             val (
                 counterTextRef,
                 incrementButtonRef
             ) = createRefs()
 
             Text(
-//                text = counter.toString(),
-                text = "QWERTY",
+                text = counter.toString(),
+//                text = "QWERTY",
                 fontSize = 32.sp,
                 modifier = Modifier.constrainAs(counterTextRef) {
                     centerHorizontallyTo(parent)
@@ -88,20 +89,6 @@ fun AppScreen() {
             )
 
             if (shouldShowSquare) {
-
-                LaunchedEffect(Unit) {
-                    println("AAAA effect started")
-                    try {
-                        snapshotFlow { counter }
-                            .collect {
-                                println("AAAA collected - $it")
-                            }
-                    } catch (e: CancellationException) {
-                        println("AAAA effect cancelled")
-                        throw e
-                    }
-                }
-
                 Box(
                     modifier = Modifier
                         .size(64.dp)
@@ -112,7 +99,17 @@ fun AppScreen() {
                         }
                 )
             }
-            println("AAAA - stop composition")
+        }
+    }
+}
+
+@Composable
+fun MyFun(value: Int) {
+    val valueState by rememberUpdatedState(value)
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(1000)
+            println("AAAA counter = $valueState")
         }
     }
 }
