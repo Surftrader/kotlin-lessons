@@ -3,6 +3,7 @@ package ua.com.poseal.helloworld
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,16 +16,29 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
+
+enum class Tab(
+    val label: String,
+    val icon: ImageVector,
+) {
+    Items("Items", Icons.AutoMirrored.Filled.List),
+    Settings("Settings", Icons.Default.Settings),
+    Profile("Profile", Icons.Default.AccountBox),
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,11 +53,15 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppScreen() {
 
+    var currentTab by remember {
+        mutableStateOf(Tab.Items)
+    }
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         TopAppBar(
-            title = { Text(text = "Random Title") },
+            title = { Text(text = currentTab.label) },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer
             )
@@ -55,89 +73,56 @@ fun AppScreen() {
                 .fillMaxWidth()
                 .weight(1.0f)
         ) {
-            // TODO: content here
+            TabScreen(tab = currentTab)
         }
 
         NavigationBar {
-
-            NavigationBarItem(
-                selected = true,
-                onClick = { /*TODO*/ },
-                icon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.List,
-                        contentDescription = null,
-                    )
-                },
-                label = {
-                    Text(text = stringResource(R.string.items))
-                },
-                enabled = true,
-                alwaysShowLabel = true, // when selected = false - label(text) will be invisible
-                colors = NavigationBarItemDefaults.colors(
-                    unselectedIconColor = Color.Blue, // when selected = false
-                    selectedIconColor = Color.Red, // when selected = true
-                    disabledIconColor = Color.LightGray, // when enabled = false
-                    // The same for label:
-                    unselectedTextColor = Color.Blue,
-                    selectedTextColor = Color.Red,
-                    disabledTextColor = Color.LightGray,
-
-                    indicatorColor = Color.Yellow // when selected = true
+            Tab.entries.forEach { tab ->
+                NavigationBarItem(
+                    selected = tab == currentTab,
+                    onClick = { currentTab = tab },
+                    label = { Text(text = tab.label) },
+                    icon = {
+                        Icon(
+                            imageVector = tab.icon,
+                            contentDescription = null,
+                        )
+                    },
                 )
-            )
+            }
 
-            NavigationBarItem(
-                selected = false,
-                onClick = { /*TODO*/ },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = null,
-                    )
-                },
-                label = {
-                    Text(text = stringResource(R.string.settings))
-                },
-                enabled = true,
-                alwaysShowLabel = false,
-                colors = NavigationBarItemDefaults.colors(
-                    unselectedIconColor = Color.Blue,
-                    selectedIconColor = Color.Red,
-                    disabledIconColor = Color.LightGray,
-                    unselectedTextColor = Color.Blue,
-                    selectedTextColor = Color.Red,
-                    disabledTextColor = Color.LightGray,
-                    indicatorColor = Color.Yellow
-                )
-            )
-
-            NavigationBarItem(
-                selected = false,
-                onClick = { /*TODO*/ },
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.AccountBox,
-                        contentDescription = null,
-                    )
-                },
-                label = {
-                    Text(text = stringResource(R.string.profile))
-                },
-                enabled = false,
-                alwaysShowLabel = true,
-                colors = NavigationBarItemDefaults.colors(
-                    unselectedIconColor = Color.Blue,
-                    selectedIconColor = Color.Red,
-                    disabledIconColor = Color.LightGray,
-                    unselectedTextColor = Color.Blue,
-                    selectedTextColor = Color.Red,
-                    disabledTextColor = Color.LightGray,
-                    indicatorColor = Color.Yellow
-                )
-            )
         }
 
+    }
+}
+
+@Composable
+fun ItemsScreen() {
+    Box(contentAlignment = Alignment.Center) {
+        Text(text = "Items Screen", fontSize = 20.sp)
+    }
+}
+
+@Composable
+fun SettingsScreen() {
+    Box(contentAlignment = Alignment.Center) {
+        Text(text = "Settings Screen", fontSize = 20.sp)
+    }
+}
+
+@Composable
+fun ProfileScreen() {
+    Box(contentAlignment = Alignment.Center) {
+        Text(text = "Profile Screen", fontSize = 20.sp)
+    }
+}
+
+@Composable
+fun TabScreen(tab: Tab) {
+    when (tab) {
+        Tab.Items -> ItemsScreen()
+        Tab.Settings -> SettingsScreen()
+        Tab.Profile -> ProfileScreen()
     }
 }
 
