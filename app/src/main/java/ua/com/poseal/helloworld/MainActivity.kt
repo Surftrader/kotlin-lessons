@@ -50,6 +50,13 @@ fun AppScreen() {
         println("AAAA 111")
     }
 
+    if (counter % 2 == 0) {
+        BackHandler {
+            println("AAAA 222")
+        }
+        Box(modifier = Modifier.size(60.dp).background(Color.Red))
+    }
+
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -69,12 +76,6 @@ fun AppScreen() {
                 text = stringResource(R.string.increment),
                 fontSize = 18.sp,
             )
-        }
-        if (counter % 2 == 1) {
-            Box(modifier = Modifier.size(60.dp).background(Color.Red))
-            BackHandler {
-                println("AAAA 222")
-            }
         }
     }
 }
