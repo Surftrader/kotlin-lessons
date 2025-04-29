@@ -1,33 +1,32 @@
 package ua.com.poseal.helloworld
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,42 +39,58 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun AppScreen() {
-
-    var counter by remember {
-        mutableIntStateOf(0)
+    var showPopupMenu by remember {
+        mutableStateOf(false)
     }
 
-    // System back button
-    BackHandler {
-        println("AAAA 111")
-    }
-
-    if (counter % 2 == 0) {
-        BackHandler {
-            println("AAAA 222")
-        }
-        Box(modifier = Modifier.size(60.dp).background(Color.Red))
-    }
+    val context = LocalContext.current
 
     Column(
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
     ) {
-        Text(
-            text = counter.toString(),
-            fontSize = 60.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Monospace,
-        )
-        Spacer(modifier = Modifier.height(100.dp))
-        Button(
-            onClick = { counter++ }
-        ) {
-            Text(
-                text = stringResource(R.string.increment),
-                fontSize = 18.sp,
-            )
+        Text(text = stringResource(R.string.popup_menu_example))
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Box {
+
+            Button(
+                onClick = {
+                    showPopupMenu = true
+                }
+            ) {
+                Text(text = stringResource(R.string.show))
+            }
+
+            DropdownMenu(
+                expanded = showPopupMenu,
+                onDismissRequest = { showPopupMenu = false }
+            ) {
+                DropdownMenuItem(
+                    text = { Text("Menu Item 111") },
+                    onClick = {
+                        Toast.makeText(
+                            context,
+                            "Text 111",
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                        showPopupMenu = false
+                    },
+                )
+                HorizontalDivider(modifier = Modifier, thickness = 2.dp, color = Color.LightGray)
+                DropdownMenuItem(
+                    text = { Text("Menu Item 222") },
+                    onClick = {
+                        Toast.makeText(
+                            context,
+                            "Text 222",
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                        showPopupMenu = false
+                    },
+                )
+            }
         }
     }
 }
