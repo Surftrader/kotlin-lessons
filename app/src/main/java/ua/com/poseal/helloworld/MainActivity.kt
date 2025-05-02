@@ -1,92 +1,292 @@
 package ua.com.poseal.helloworld
 
+import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ua.com.poseal.mylibrary.Label
-import java.util.UUID
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ua.com.poseal.helloworld.ui.theme.AppTheme
+import ua.com.poseal.navigation.NavigationHost
+import ua.com.poseal.navigation.rememberNavigation
+
+
+val RootTabs = listOf(AppRoute.Tab.Items, AppRoute.Tab.Settings, AppRoute.Tab.Profile)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            StatefulCounter()
+            AppTheme {
+                AppScreen()
+            }
         }
     }
 }
 
-@Preview(showSystemUi = true)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StatefulCounter() {
-    var label by remember { mutableStateOf(Label("Hello")) }
-    var counter by remember { mutableIntStateOf(0) }
+fun AppScreen(itemsRepository: ItemsRepository = ItemsRepository.get()) {
+
+    val items by itemsRepository.getItems().collectAsStateWithLifecycle()
+
+    val navigation = rememberNavigation(initialRoure = AppRoute.Tab.Items)
+    val (router, navigationState) = navigation
+
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(
+                            (navigationState.currentRoute as? AppRoute)?.titleRes ?: R.string.app_name
+                        ),
+                        fontWeight = FontWeight.Bold,
+                    )
+                },
+                colors = TopAppBarDefaults.largeTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.primary,
+                ),
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            if (!navigationState.isRoot) {
+                                router.pop()
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = if (navigationState.isRoot) {
+                                Icons.Default.Menu
+                            } else {
+                                Icons.AutoMirrored.Filled.ArrowBack
+                            },
+                            contentDescription = stringResource(R.string.main_menu)
+                        )
+                    }
+                },
+                actions = {
+                    var showPopupMenu by remember { mutableStateOf(false) }
+                    val context = LocalContext.current
+                    IconButton(
+                        onClick = { showPopupMenu = true }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = stringResource(R.string.more_actions)
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = showPopupMenu,
+                        onDismissRequest = { showPopupMenu = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.about)) },
+                            onClick = {
+                                Toast.makeText(
+                                    context,
+                                    R.string.scaffold_app,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                showPopupMenu = false
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.clear)) },
+                            onClick = {
+                                itemsRepository.clear()
+                                showPopupMenu = false
+                            },
+                        )
+                    }
+                }
+            )
+        },
+        floatingActionButton = {
+            if (navigationState.currentRoute == AppRoute.Tab.Items) {
+                FloatingActionButton(
+                    onClick = { router.launch(AppRoute.AddItem) }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(R.string.add_item)
+                    )
+                }
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End,
+        bottomBar = {
+            if (navigationState.isRoot) {
+                NavigationBar {
+                    RootTabs.forEach { tab ->
+                        NavigationBarItem(
+                            selected = navigationState.currentRoute == tab,
+                            label = { Text(stringResource(tab.titleRes)) },
+                            onClick = {
+                                router.restart(tab)
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector = tab.icon,
+                                    contentDescription = stringResource(tab.titleRes)
+                                )
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    ) { paddingValues ->
+        NavigationHost(
+            navigation = navigation,
+            modifier = Modifier.padding(paddingValues)
+        ) { currentRoute ->
+            when (currentRoute) {
+                AppRoute.Tab.Items -> ItemsScreen(items)
+                AppRoute.Tab.Settings -> SettingsScreen()
+                AppRoute.Tab.Profile -> ProfileScreen()
+                AppRoute.AddItem -> {
+                    AddItemScreen(
+                        onSubmitNewItem = {
+                            itemsRepository.addItem(it)
+                            router.pop()
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ItemsScreen(items: List<String>) {
+    if (items.isEmpty()) {
+        Text(
+            text = stringResource(R.string.no_items),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentHeight()
+        )
+    } else {
+        LazyColumn {
+            items(items) { item ->
+                Text(
+                    text = item,
+                    modifier = Modifier.padding(all = 8.dp),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun AddItemScreen(onSubmitNewItem: (String) -> Unit) {
+    var newItemValue by remember { mutableStateOf("") }
+    val isAddEnabled by remember {
+        derivedStateOf { newItemValue.isNotEmpty() }
+    }
 
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
     ) {
-        LabelText(label)
-        CounterText(counter)
-        Spacer(modifier = Modifier.height(100.dp))
-        Button(
-            onClick = { counter++ }
-        ) {
-            Text(
-                text = stringResource(R.string.increment),
-                fontSize = 18.sp
-            )
-        }
-        Button(
-            onClick = {
-                label = Label(UUID.randomUUID().toString().substringBefore("-"))
+        OutlinedTextField(
+            value = newItemValue,
+            label = { Text(stringResource(R.string.enter_value)) },
+            singleLine = true,
+            onValueChange = { newValue ->
+                newItemValue = newValue
             }
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            enabled = isAddEnabled,
+            onClick = { onSubmitNewItem(newItemValue) }
         ) {
-            Text(
-                text = "Random Label",
-                fontSize = 18.sp
-            )
+            Text(text = stringResource(R.string.add_item))
         }
     }
 }
 
 @Composable
-fun CounterText(counter: Int) {
+fun SettingsScreen() {
     Text(
-        text = counter.toString(),
-        fontSize = 60.sp,
-        fontWeight = FontWeight.Bold,
-        fontFamily = FontFamily.Monospace,
+        text = "Settings Screen",
+        textAlign = TextAlign.Center,
+        fontSize = 20.sp,
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentHeight()
     )
 }
 
 @Composable
-fun LabelText(label: Label) {
+fun ProfileScreen() {
     Text(
-        text = label.text,
-        fontSize = 32.sp,
-        fontWeight = FontWeight.Bold,
-        fontFamily = FontFamily.Monospace,
+        text = "Profile Screen",
+        textAlign = TextAlign.Center,
+        fontSize = 20.sp,
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentHeight()
     )
+}
+
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+@Preview(showSystemUi = true)
+@Composable
+fun AppScreenPreview() {
+    AppTheme(darkTheme = true) {
+        AppScreen()
+
+    }
 }

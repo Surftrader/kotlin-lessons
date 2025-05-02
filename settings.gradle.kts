@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Hello World"
 include(":app")
-include(":mylibrary")
+include(":navigation")

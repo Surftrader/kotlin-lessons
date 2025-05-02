@@ -1,4 +1,4 @@
-package ua.com.poseal.mylibrary
+package ua.com.poseal.navigation
 
 import org.junit.Test
 
