@@ -1,4 +1,4 @@
-package ua.com.poseal.helloworld.screens
+package ua.com.poseal.helloworld.ui.screens
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentHeight
