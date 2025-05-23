@@ -1,10 +1,11 @@
 package ua.com.poseal.helloworld.ui
 
 import kotlinx.parcelize.Parcelize
-import ua.com.poseal.helloworld.ui.screens.AddItemScreenProducer
+import ua.com.poseal.helloworld.ui.screens.ItemScreenArgs
 import ua.com.poseal.helloworld.ui.screens.ItemsScreenProducer
 import ua.com.poseal.helloworld.ui.screens.ProfileScreenProducer
 import ua.com.poseal.helloworld.ui.screens.SettingsScreenProducer
+import ua.com.poseal.helloworld.ui.screens.itemScreenProducer
 import ua.com.poseal.navigation.Route
 import ua.com.poseal.navigation.Screen
 
@@ -13,7 +14,9 @@ sealed class AppRoute(
 ) : Route {
 
     @Parcelize
-    data object AddItem : AppRoute(AddItemScreenProducer)
+    data class Item(
+        val args: ItemScreenArgs
+    ) : AppRoute(itemScreenProducer(args))
 
     sealed class Tab(
         screenProducer: () -> AppScreen,
