@@ -13,10 +13,12 @@ import ua.com.poseal.navigation.NavigationState
 import ua.com.poseal.navigation.Route
 import ua.com.poseal.navigation.Router
 import ua.com.poseal.navigation.Screen
+import ua.com.poseal.navigation.ScreenResponseReceiver
 
 //@SuppressLint("ParcelCreator")
 internal class ScreenStack(
     private val routes: SnapshotStateList<RouteRecord>,
+    private val screenResponsesBus: ScreenResponsesBus = ScreenResponsesBus(),
 ) : NavigationState, Router, InternalNavigationState, Parcelable {
 
     private val eventsFlow = MutableSharedFlow<NavigationEvent>(
@@ -51,20 +53,26 @@ internal class ScreenStack(
     override val currentScreen: Screen by derivedStateOf {
         currentRoute.screenProducer()
     }
+    override val screenResponseReceiver: ScreenResponseReceiver = screenResponsesBus
 
     // realization methods of Router
     override fun launch(route: Route) {
+        screenResponsesBus.cleanUp()
         routes.add(RouteRecord(route))
     }
 
-    override fun pop() {
+    override fun pop(response: Any?) {
         val removedRouteRecord = routes.removeLastOrNull()
         if (removedRouteRecord != null) {
             eventsFlow.tryEmit(NavigationEvent.Removed(removedRouteRecord))
+            if (response != null) {
+                screenResponsesBus.send(response)
+            }
         }
     }
 
     override fun restart(route: Route) {
+        screenResponsesBus.cleanUp()
         routes.apply {
             routes.forEach {
                 eventsFlow.tryEmit(NavigationEvent.Removed(it))

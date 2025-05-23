@@ -27,6 +27,7 @@ import ua.com.poseal.helloworld.ui.AppScreen
 import ua.com.poseal.helloworld.ui.AppScreenEnvironment
 import ua.com.poseal.helloworld.ui.FloatingAction
 import ua.com.poseal.navigation.LocalRouter
+import ua.com.poseal.navigation.ResponseListener
 import ua.com.poseal.navigation.Router
 
 val ItemsScreenProducer = { ItemsScreen() }
@@ -52,6 +53,13 @@ class ItemsScreen : AppScreen {
         val items by itemsRepository.getItems().collectAsStateWithLifecycle()
         val isEmpty by remember {
             derivedStateOf { items.isEmpty() }
+        }
+        ResponseListener<ItemScreenResponse> { response ->
+            if (response.args is ItemScreenArgs.Edit) {
+                itemsRepository.updateItem(response.args.index, response.newValue)
+            } else {
+                itemsRepository.addItem(response.newValue)
+            }
         }
         ItemsContent(
             isItemsEmpty = isEmpty,
