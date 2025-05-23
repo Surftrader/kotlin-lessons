@@ -1,5 +1,6 @@
 package ua.com.poseal.helloworld.ui.scaffold
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
@@ -24,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import ua.com.poseal.helloworld.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,9 +33,9 @@ import ua.com.poseal.helloworld.R
 fun AppToolbar(
     @StringRes titleRes: Int,
     isRoot: Boolean,
-    onPopAction: () -> Unit,
-    onClearAction: () -> Unit,
-    modifier: Modifier = Modifier,
+    onPopAction: () -> Unit = {},
+    onClearAction: () -> Unit = {},
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
 ) {
     CenterAlignedTopAppBar(
         modifier = modifier,
@@ -100,5 +102,23 @@ fun AppToolbar(
                 )
             }
         }
+    )
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun AppToolbarRootPreview() {
+    AppToolbar(
+        titleRes = R.string.scaffold_app,
+        isRoot= true,
+    )
+}
+
+@Preview(showSystemUi = true)
+@Composable
+private fun AppToolbarNotRootPreview() {
+    AppToolbar(
+        titleRes = R.string.scaffold_app,
+        isRoot= false,
     )
 }

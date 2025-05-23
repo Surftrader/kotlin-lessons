@@ -6,10 +6,11 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import ua.com.poseal.navigation.internal.InternalNavigationState
+import ua.com.poseal.navigation.internal.RouteRecord
 import ua.com.poseal.navigation.internal.ScreenStack
 
 @Stable
-data class Navigation(
+data class Navigation internal constructor(
     val router: Router,
     val navigationState: NavigationState,
     internal val internalNavigationState: InternalNavigationState,
@@ -18,7 +19,7 @@ data class Navigation(
 @Composable
 fun rememberNavigation(initialRoure: Route) : Navigation {
         val screenStack = rememberSaveable {
-            ScreenStack(mutableStateListOf(initialRoure))
+            ScreenStack(mutableStateListOf(RouteRecord(initialRoure)))
         }
 
     return remember(initialRoure) {
