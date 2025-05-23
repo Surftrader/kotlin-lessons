@@ -18,7 +18,6 @@ val LocalRouter = staticCompositionLocalOf<Router> { EmptyRouter }
 fun NavigationHost(
     navigation: Navigation,
     modifier: Modifier = Modifier,
-    routeMapper: @Composable (Route) -> Unit,
 ) {
 
     val (
@@ -37,7 +36,7 @@ fun NavigationHost(
             CompositionLocalProvider(
                 LocalRouter provides router
             ) {
-                routeMapper.invoke(navigationState.currentRoute)
+                navigationState.currentScreen.Content()
             }
         }
     }

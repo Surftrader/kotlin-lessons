@@ -1,31 +1,36 @@
 package ua.com.poseal.helloworld.ui.scaffold
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import ua.com.poseal.helloworld.R
-import ua.com.poseal.helloworld.ui.AppRoute
-import ua.com.poseal.navigation.Route
+import ua.com.poseal.helloworld.ui.FloatingAction
 
 @Composable
 fun AppFloatingActionButton(
-    currentRouter: Route,
-    onLaunchAction: (AppRoute) -> Unit,
+    floatingAction: FloatingAction?,
     modifier: Modifier = Modifier,
 ) {
-    if (currentRouter == AppRoute.Tab.Items) {
+    if (floatingAction != null) {
         FloatingActionButton(
             modifier = modifier,
-            onClick = { onLaunchAction(AppRoute.AddItem) }
+            onClick = floatingAction.onClick
         ) {
             Icon(
-                imageVector = Icons.Default.Add,
+                imageVector = floatingAction.icon,
                 contentDescription = stringResource(R.string.add_item)
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun AppFloatingActionButtonPreview() {
+    AppFloatingActionButton(
+        floatingAction = null
+    )
 }

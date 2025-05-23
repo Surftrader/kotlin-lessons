@@ -1,29 +1,30 @@
 package ua.com.poseal.helloworld.ui
 
-import androidx.annotation.StringRes
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.parcelize.Parcelize
-import ua.com.poseal.helloworld.R
+import ua.com.poseal.helloworld.ui.screens.AddItemScreenProducer
+import ua.com.poseal.helloworld.ui.screens.ItemsScreenProducer
+import ua.com.poseal.helloworld.ui.screens.ProfileScreenProducer
+import ua.com.poseal.helloworld.ui.screens.SettingsScreenProducer
 import ua.com.poseal.navigation.Route
+import ua.com.poseal.navigation.Screen
 
-sealed class AppRoute(@StringRes val titleRes: Int = 0) : Route {
+sealed class AppRoute(
+    override val screenProducer: () -> Screen
+) : Route {
 
     @Parcelize
-    data object AddItem : AppRoute(R.string.add_item)
+    data object AddItem : AppRoute(AddItemScreenProducer)
 
     sealed class Tab(
-        @StringRes titleRes: Int,
-        val icon: ImageVector,
-    ) : AppRoute(titleRes) {
+        screenProducer: () -> AppScreen,
+    ) : AppRoute(screenProducer) {
         @Parcelize
-        data object Items : Tab(R.string.items, Icons.AutoMirrored.Filled.List)
+        data object Items : Tab(ItemsScreenProducer)
         @Parcelize
-        data object Settings : Tab(R.string.settings, Icons.Default.Settings)
+        data object Settings : Tab(SettingsScreenProducer)
         @Parcelize
-        data object Profile : Tab(R.string.profile, Icons.Default.AccountBox)
+        data object Profile : Tab(ProfileScreenProducer)
     }
 }
+
+val RootTabs = listOf(AppRoute.Tab.Items, AppRoute.Tab.Settings, AppRoute.Tab.Profile)

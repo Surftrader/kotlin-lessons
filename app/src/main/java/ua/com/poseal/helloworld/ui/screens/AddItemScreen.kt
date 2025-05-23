@@ -24,21 +24,32 @@ import androidx.compose.ui.unit.dp
 import ua.com.poseal.helloworld.ui.AppRoute
 import ua.com.poseal.helloworld.ItemsRepository
 import ua.com.poseal.helloworld.R
+import ua.com.poseal.helloworld.ui.AppScreen
+import ua.com.poseal.helloworld.ui.AppScreenEnvironment
 import ua.com.poseal.navigation.LocalRouter
 
-@Composable
-fun AddItemScreen() {
-    val itemsRepository = ItemsRepository.get()
-    val router = LocalRouter.current
-    AddItemContent(
-        onSubmitNewItem = {
-            itemsRepository.addItem(it)
-            router.pop()
-        },
-        onLaunchSettingsScreen = {
-            router.launch(AppRoute.Tab.Settings)
-        }
-    )
+val AddItemScreenProducer = { AddItemScreen() }
+
+class AddItemScreen : AppScreen {
+
+    override val environment = AppScreenEnvironment().apply {
+        titleRes = R.string.add_item
+    }
+
+    @Composable
+    override fun Content() {
+        val itemsRepository = ItemsRepository.get()
+        val router = LocalRouter.current
+        AddItemContent(
+            onSubmitNewItem = {
+                itemsRepository.addItem(it)
+                router.pop()
+            },
+            onLaunchSettingsScreen = {
+                router.launch(AppRoute.Tab.Settings)
+            }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

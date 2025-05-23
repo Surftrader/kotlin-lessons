@@ -9,14 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import ua.com.poseal.helloworld.ItemsRepository
-import ua.com.poseal.helloworld.R
 import ua.com.poseal.helloworld.ui.scaffold.AppFloatingActionButton
 import ua.com.poseal.helloworld.ui.scaffold.AppNavigationBar
 import ua.com.poseal.helloworld.ui.scaffold.AppToolbar
 import ua.com.poseal.helloworld.ui.theme.AppTheme
 import ua.com.poseal.navigation.rememberNavigation
-
-val RootTabs = listOf(AppRoute.Tab.Items, AppRoute.Tab.Settings, AppRoute.Tab.Profile)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,12 +21,13 @@ fun AppScaffold() {
     val itemsRepository: ItemsRepository = ItemsRepository.get()
     val navigation = rememberNavigation(initialRoure = AppRoute.Tab.Items)
     val (router, navigationState) = navigation
+    val environment = navigationState.currentScreen.environment as AppScreenEnvironment
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             AppToolbar(
-                titleRes = (navigationState.currentRoute as? AppRoute)?.titleRes ?: R.string.app_name,
+                titleRes = environment.titleRes,
                 isRoot = navigationState.isRoot,
                 onPopAction = router::pop,
                 onClearAction = itemsRepository::clear
@@ -37,8 +35,7 @@ fun AppScaffold() {
         },
         floatingActionButton = {
             AppFloatingActionButton(
-                currentRouter = navigationState.currentRoute,
-                onLaunchAction = router::launch
+                floatingAction = environment.floatingAction,
             )
         },
         floatingActionButtonPosition = FabPosition.End,

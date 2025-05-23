@@ -3,6 +3,8 @@ package ua.com.poseal.navigation.internal
 import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.core.os.ParcelCompat
 import kotlinx.coroutines.flow.Flow
@@ -10,6 +12,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import ua.com.poseal.navigation.NavigationState
 import ua.com.poseal.navigation.Route
 import ua.com.poseal.navigation.Router
+import ua.com.poseal.navigation.Screen
 
 //@SuppressLint("ParcelCreator")
 internal class ScreenStack(
@@ -45,6 +48,9 @@ internal class ScreenStack(
     override val isRoot: Boolean get() = routes.size == 1
     override val currentRoute: Route get() = routes.last().route
     override val currentUuid: String get() = routes.last().uuid
+    override val currentScreen: Screen by derivedStateOf {
+        currentRoute.screenProducer()
+    }
 
     // realization methods of Router
     override fun launch(route: Route) {
