@@ -1,29 +1,20 @@
 package ua.com.poseal.navigation.internal
 
-import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.core.os.ParcelCompat
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import ua.com.poseal.navigation.NavigationState
 import ua.com.poseal.navigation.Route
-import ua.com.poseal.navigation.Router
 import ua.com.poseal.navigation.Screen
 import ua.com.poseal.navigation.ScreenResponseReceiver
 
-//@SuppressLint("ParcelCreator")
 internal class ScreenStack(
     private val routes: SnapshotStateList<RouteRecord>,
     private val screenResponsesBus: ScreenResponsesBus = ScreenResponsesBus(),
-) : NavigationState, Router, InternalNavigationState, Parcelable {
-
-    private val eventsFlow = MutableSharedFlow<NavigationEvent>(
-        extraBufferCapacity = Int.MAX_VALUE,
-    )
+) : Parcelable {
 
     constructor(parcel: Parcel) : this(
         SnapshotStateList<RouteRecord>().also { newList ->
@@ -36,7 +27,10 @@ internal class ScreenStack(
         }
     )
 
-    // Instead of @SuppressLint("ParcelCreator")
+    constructor(rootRoute: Route) : this(
+        routes = mutableStateListOf(RouteRecord(rootRoute))
+    )
+
     companion object CREATOR: Parcelable.Creator<ScreenStack?> {
         override fun createFromParcel(parcel: Parcel): ScreenStack? {
             return ScreenStack(parcel)
@@ -47,39 +41,28 @@ internal class ScreenStack(
     }
 
     // realization methods of NavigationState
-    override val isRoot: Boolean get() = routes.size == 1
-    override val currentRoute: Route get() = routes.last().route
-    override val currentUuid: String get() = routes.last().uuid
-    override val currentScreen: Screen by derivedStateOf {
+    val isRoot: Boolean get() = routes.size == 1
+    val currentRoute: Route get() = routes.last().route
+    val currentUuid: String get() = routes.last().uuid
+    val currentScreen: Screen by derivedStateOf {
         currentRoute.screenProducer()
     }
-    override val screenResponseReceiver: ScreenResponseReceiver = screenResponsesBus
+    val screenResponseReceiver: ScreenResponseReceiver = screenResponsesBus
 
     // realization methods of Router
-    override fun launch(route: Route) {
+    fun launch(route: Route) {
         screenResponsesBus.cleanUp()
         routes.add(RouteRecord(route))
     }
 
-    override fun pop(response: Any?) {
+    fun pop(response: Any?) : RouteRecord? {
         val removedRouteRecord = routes.removeLastOrNull()
         if (removedRouteRecord != null) {
-            eventsFlow.tryEmit(NavigationEvent.Removed(removedRouteRecord))
             if (response != null) {
                 screenResponsesBus.send(response)
             }
         }
-    }
-
-    override fun restart(route: Route) {
-        screenResponsesBus.cleanUp()
-        routes.apply {
-            routes.forEach {
-                eventsFlow.tryEmit(NavigationEvent.Removed(it))
-            }
-            clear()
-            add(RouteRecord(route))
-        }
+        return removedRouteRecord
     }
 
     override fun describeContents(): Int {
@@ -90,7 +73,5 @@ internal class ScreenStack(
         parcel.writeList(routes)
     }
 
-    override fun listen(): Flow<NavigationEvent> {
-        return eventsFlow
-    }
+    fun getAllRouteRecords() : List<RouteRecord> = routes
 }

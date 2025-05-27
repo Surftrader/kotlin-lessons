@@ -1,5 +1,6 @@
 package ua.com.poseal.helloworld.ui
 
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.parcelize.Parcelize
 import ua.com.poseal.helloworld.ui.screens.ItemScreenArgs
 import ua.com.poseal.helloworld.ui.screens.ItemsScreenProducer
@@ -30,4 +31,4 @@ sealed class AppRoute(
     }
 }
 
-val RootTabs = listOf(AppRoute.Tab.Items, AppRoute.Tab.Settings, AppRoute.Tab.Profile)
+val RootTabs = persistentListOf(AppRoute.Tab.Items, AppRoute.Tab.Settings, AppRoute.Tab.Profile)

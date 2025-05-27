@@ -8,29 +8,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import ua.com.poseal.helloworld.ui.AppScreenEnvironment
 import ua.com.poseal.helloworld.ui.RootTabs
-import ua.com.poseal.navigation.Route
 
 @Composable
 fun AppNavigationBar(
-    currentRoute: Route,
-    onRouteSelected: (Route) -> Unit,
+    currentIndex: Int,
+    onIndexSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     NavigationBar(
         modifier = modifier,
     ) {
-        RootTabs.forEach { tab ->
+        RootTabs.forEachIndexed { index, tab ->
             val environment = remember(tab) {
                 tab.screenProducer().environment as AppScreenEnvironment
             }
             val icon = environment.icon
             if (icon != null) {
                 NavigationBarItem(
-                    selected = currentRoute == tab,
+                    selected = currentIndex == index,
                     label = { Text(stringResource(environment.titleRes)) },
-                    onClick = { onRouteSelected(tab) },
+                    onClick = { onIndexSelected(index) },
                     icon = {
                         Icon(
                             imageVector = icon,
@@ -41,4 +41,13 @@ fun AppNavigationBar(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun AppNavigationBarPreview() {
+    AppNavigationBar(
+        currentIndex = 0,
+        onIndexSelected = {}
+    )
 }
