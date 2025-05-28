@@ -19,7 +19,7 @@ import ua.com.poseal.navigation.rememberNavigation
 @Composable
 fun AppScaffold() {
     val itemsRepository: ItemsRepository = ItemsRepository.get()
-    val navigation = rememberNavigation(RootTabs)
+    val navigation = rememberNavigation(RootTabs, deepLinkHandler = AppDeepLinkHandler)
     val (router, navigationState) = navigation
     val environment = navigationState.currentScreen.environment as AppScreenEnvironment
 

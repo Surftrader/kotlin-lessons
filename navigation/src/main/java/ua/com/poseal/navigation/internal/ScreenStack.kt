@@ -6,6 +6,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.core.os.ParcelCompat
 import ua.com.poseal.navigation.Route
 import ua.com.poseal.navigation.Screen
@@ -48,6 +49,10 @@ internal class ScreenStack(
         currentRoute.screenProducer()
     }
     val screenResponseReceiver: ScreenResponseReceiver = screenResponsesBus
+
+    constructor(routes: List<Route>) : this(
+        routes.map(::RouteRecord).toMutableStateList()
+    )
 
     // realization methods of Router
     fun launch(route: Route) {
