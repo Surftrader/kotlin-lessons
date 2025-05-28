@@ -2,11 +2,11 @@ package ua.com.poseal.helloworld.ui
 
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.parcelize.Parcelize
-import ua.com.poseal.helloworld.ui.screens.ItemScreenArgs
-import ua.com.poseal.helloworld.ui.screens.ItemsScreenProducer
+import ua.com.poseal.helloworld.ui.screens.item.ItemScreenArgs
+import ua.com.poseal.helloworld.ui.screens.items.ItemsScreenProducer
 import ua.com.poseal.helloworld.ui.screens.ProfileScreenProducer
 import ua.com.poseal.helloworld.ui.screens.SettingsScreenProducer
-import ua.com.poseal.helloworld.ui.screens.itemScreenProducer
+import ua.com.poseal.helloworld.ui.screens.item.itemScreenProducer
 import ua.com.poseal.navigation.Route
 import ua.com.poseal.navigation.Screen
 

@@ -1,4 +1,4 @@
-package ua.com.poseal.helloworld.ui.screens
+package ua.com.poseal.helloworld.ui.screens.items
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,12 +20,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import ua.com.poseal.helloworld.ItemsRepository
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ua.com.poseal.helloworld.R
 import ua.com.poseal.helloworld.ui.AppRoute
 import ua.com.poseal.helloworld.ui.AppScreen
 import ua.com.poseal.helloworld.ui.AppScreenEnvironment
 import ua.com.poseal.helloworld.ui.FloatingAction
+import ua.com.poseal.helloworld.ui.screens.item.ItemScreenArgs
 import ua.com.poseal.navigation.LocalRouter
 import ua.com.poseal.navigation.ResponseListener
 import ua.com.poseal.navigation.Router
@@ -49,18 +50,12 @@ class ItemsScreen : AppScreen {
     @Composable
     override fun Content() {
         router = LocalRouter.current
-        val itemsRepository = ItemsRepository.get()
-        val items by itemsRepository.getItems().collectAsStateWithLifecycle()
+        val viewModel = viewModel<ItemsViewModel>()
+        val items by viewModel.itemFlow.collectAsStateWithLifecycle()
         val isEmpty by remember {
             derivedStateOf { items.isEmpty() }
         }
-        ResponseListener<ItemScreenResponse> { response ->
-            if (response.args is ItemScreenArgs.Edit) {
-                itemsRepository.updateItem(response.args.index, response.newValue)
-            } else {
-                itemsRepository.addItem(response.newValue)
-            }
-        }
+        ResponseListener(viewModel::processResponse)
         ItemsContent(
             isItemsEmpty = isEmpty,
             items = { items },

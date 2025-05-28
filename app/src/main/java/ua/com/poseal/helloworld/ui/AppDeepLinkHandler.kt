@@ -1,7 +1,7 @@
 package ua.com.poseal.helloworld.ui
 
 import android.net.Uri
-import ua.com.poseal.helloworld.ui.screens.ItemScreenArgs
+import ua.com.poseal.helloworld.ui.screens.item.ItemScreenArgs
 import ua.com.poseal.navigation.links.DeepLinkHandler
 import ua.com.poseal.navigation.links.MultiStackState
 

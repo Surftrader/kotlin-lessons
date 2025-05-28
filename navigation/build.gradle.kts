@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.material3)
 
     api(libs.kotlinx.collections.imutable)
+    api(libs.androidx.lifecycle.viewmodel.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
