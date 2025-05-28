@@ -22,10 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.parcelize.Parcelize
 import ua.com.poseal.helloworld.ui.AppRoute
 import ua.com.poseal.helloworld.R
+import ua.com.poseal.helloworld.di.injectViewModel
 import ua.com.poseal.helloworld.ui.AppScreen
 import ua.com.poseal.helloworld.ui.AppScreenEnvironment
 import ua.com.poseal.navigation.LocalRouter
@@ -61,7 +61,9 @@ class ItemScreen(
 
     @Composable
     override fun Content() {
-        val viewModel = viewModel { ItemViewModel(args) }
+        val viewModel = injectViewModel<ItemViewModel, ItemViewModel.Factory> { factory ->
+            factory.create(args)
+        }
         val router = LocalRouter.current
         ItemContent(
             initialValue = remember { viewModel.getInitialValue() },

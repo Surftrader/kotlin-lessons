@@ -20,8 +20,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ua.com.poseal.helloworld.R
+import ua.com.poseal.helloworld.di.injectViewModel
 import ua.com.poseal.helloworld.ui.AppRoute
 import ua.com.poseal.helloworld.ui.AppScreen
 import ua.com.poseal.helloworld.ui.AppScreenEnvironment
@@ -50,7 +50,7 @@ class ItemsScreen : AppScreen {
     @Composable
     override fun Content() {
         router = LocalRouter.current
-        val viewModel = viewModel<ItemsViewModel>()
+        val viewModel = injectViewModel<ItemsViewModel>()
         val items by viewModel.itemFlow.collectAsStateWithLifecycle()
         val isEmpty by remember {
             derivedStateOf { items.isEmpty() }

@@ -96,7 +96,7 @@ fun AppToolbar(
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.clear)) },
                     onClick = {
-                        onClearAction
+                        onClearAction()
                         showPopupMenu = false
                     },
                 )

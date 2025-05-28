@@ -1,16 +1,17 @@
 package ua.com.poseal.helloworld.ui.screens.item
 
 import androidx.lifecycle.ViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import ua.com.poseal.helloworld.ItemsRepository
 
-class ItemViewModel(
-    private val args: ItemScreenArgs,
-    private val repository: ItemsRepository = ItemsRepository.get()
+@HiltViewModel(assistedFactory = ItemViewModel.Factory::class)
+class ItemViewModel @AssistedInject constructor(
+    @Assisted private val args: ItemScreenArgs,
+    private val repository: ItemsRepository,
 ) : ViewModel() {
-
-    init {
-        println("AAAA ItemViewModel-${hashCode()} created")
-    }
 
     fun getInitialValue() : String {
         return when (args) {
@@ -19,8 +20,8 @@ class ItemViewModel(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        println("AAAA ItemViewModel-${hashCode()} destroyed")
+    @AssistedFactory
+    interface Factory {
+        fun create(args: ItemScreenArgs) : ItemViewModel
     }
 }

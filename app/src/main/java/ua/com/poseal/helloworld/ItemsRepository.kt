@@ -3,6 +3,8 @@ package ua.com.poseal.helloworld
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
+import javax.inject.Singleton
 
 interface ItemsRepository {
 
@@ -13,13 +15,15 @@ interface ItemsRepository {
     fun addItem(item: String)
 
     fun clear()
-
-    companion object {
-        fun get(): ItemsRepository = ItemsRepositoryImpl
-    }
+// old version (without hilt)
+//    companion object {
+//        fun get(): ItemsRepository = ItemsRepositoryImpl
+//    }
 }
 
-object ItemsRepositoryImpl : ItemsRepository {
+@Singleton
+class ItemsRepositoryImpl @Inject constructor() : ItemsRepository {
+
     private val items = MutableStateFlow(generateFakeItems())
 
     override fun getItems(): StateFlow<List<String>> {

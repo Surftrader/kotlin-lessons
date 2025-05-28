@@ -8,7 +8,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import ua.com.poseal.helloworld.ItemsRepository
+import ua.com.poseal.helloworld.MainViewModel
+import ua.com.poseal.helloworld.di.injectViewModel
 import ua.com.poseal.helloworld.ui.scaffold.AppFloatingActionButton
 import ua.com.poseal.helloworld.ui.scaffold.AppNavigationBar
 import ua.com.poseal.helloworld.ui.scaffold.AppToolbar
@@ -18,7 +19,7 @@ import ua.com.poseal.navigation.rememberNavigation
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppScaffold() {
-    val itemsRepository: ItemsRepository = ItemsRepository.get()
+    val viewModel = injectViewModel<MainViewModel>()
     val navigation = rememberNavigation(RootTabs, deepLinkHandler = AppDeepLinkHandler)
     val (router, navigationState) = navigation
     val environment = navigationState.currentScreen.environment as AppScreenEnvironment
@@ -30,7 +31,7 @@ fun AppScaffold() {
                 titleRes = environment.titleRes,
                 isRoot = navigationState.isRoot,
                 onPopAction = router::pop,
-                onClearAction = itemsRepository::clear
+                onClearAction = viewModel::clear
             )
         },
         floatingActionButton = {
